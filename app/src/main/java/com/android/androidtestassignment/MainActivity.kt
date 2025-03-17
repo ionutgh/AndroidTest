@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import com.android.androidtestassignment.ui.theme.AndroidTestAssignmentTheme
-import com.android.androidtestassignment.ui.users.UsersScreen
+import com.android.androidtestassignment.ui.composables.UsersScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
