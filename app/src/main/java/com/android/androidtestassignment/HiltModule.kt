@@ -1,9 +1,15 @@
 package com.android.androidtestassignment
 
 import com.android.androidtestassignment.api.UsersRetrofitApi
+import com.android.androidtestassignment.repositories.UsersRepository
+import com.android.androidtestassignment.repositories.UsersRepositoryImpl
+import com.android.androidtestassignment.usecases.GetUsersUseCase
+import com.android.androidtestassignment.usecases.GetUsersUseCaseImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class HiltModule {
+class ApiModule {
     @Provides
     @Singleton
     fun createApiService(retrofit: Retrofit): UsersRetrofitApi {
@@ -29,4 +35,16 @@ class HiltModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+}
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class UsersModule {
+    @Binds
+    abstract fun bindGetUsersUseCase(
+        getUsersUseCaseImpl: GetUsersUseCaseImpl
+    ): GetUsersUseCase
+    @Binds
+    abstract fun bindUsersRepository(
+        usersRepositoryImpl: UsersRepositoryImpl
+    ): UsersRepository
 }

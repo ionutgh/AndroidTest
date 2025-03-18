@@ -30,6 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.androidtestassignment.R
 import com.android.androidtestassignment.ui.theme.AndroidTestAssignmentTheme
 import com.android.androidtestassignment.ui.viewmodels.UsersViewModel
@@ -38,7 +40,7 @@ import com.android.androidtestassignment.ui.viewmodels.UsersViewModel
 @Composable
 fun UsersScreen() {
     val viewModel: UsersViewModel = hiltViewModel()
-    val users by viewModel.usersStateFlow.collectAsState()
+    val users = viewModel.usersStateFlow.collectAsLazyPagingItems()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -80,12 +82,33 @@ fun UsersScreen() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(users) { user ->
-                    UserListItem(
-                        user = user,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {}
-                    )
+                items(users.itemCount) { index ->
+                    users[index]?.let {
+                        UserListItem(
+                            user = it,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {}
+                        )
+                    }
+                }
+                when {
+                    users.loadState.refresh is LoadState.Loading -> {
+                        item { LoadingDialog() }
+                    }
+
+                    users.loadState.refresh is LoadState.Error -> {
+                        val error = users.loadState.refresh as LoadState.Error
+                        //show some error message
+                    }
+
+                    users.loadState.append is LoadState.Loading -> {
+                        item { Loading(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) }
+                    }
+
+                    users.loadState.append is LoadState.Error -> {
+                        val error = users.loadState.append as LoadState.Error
+                        //show some error message
+                    }
                 }
             }
             FloatingActionButton(
@@ -98,7 +121,7 @@ fun UsersScreen() {
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface
             ) {
-                Icon (
+                Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = null
                 )

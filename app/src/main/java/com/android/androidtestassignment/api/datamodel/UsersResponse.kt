@@ -1,7 +1,8 @@
 package com.android.androidtestassignment.api.datamodel
 
 data class UsersResponse(
-    val results: List<UserModel>
+    val results: List<UserModel>,
+    val info: Info
 )
 
 data class UserModel(
@@ -78,4 +79,11 @@ data class Picture(
     val large: String,
     val medium: String,
     val thumbnail: String
+)
+
+data class Info(
+    val seed: String,
+    val results: Int,
+    val page: Int,
+    val version: String
 )
