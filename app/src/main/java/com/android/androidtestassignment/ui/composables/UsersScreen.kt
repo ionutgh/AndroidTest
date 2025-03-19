@@ -1,12 +1,13 @@
 package com.android.androidtestassignment.ui.composables
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -22,8 +23,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -99,6 +98,12 @@ fun UsersScreen() {
                     users.loadState.refresh is LoadState.Error -> {
                         val error = users.loadState.refresh as LoadState.Error
                         //show some error message
+                        item {
+                            ErrorLayout(
+                                modifier = Modifier.fillParentMaxSize(),
+                                message = error.error.localizedMessage?:stringResource(R.string.message_generic_error),
+                                onRetry = { users.retry() })
+                        }
                     }
 
                     users.loadState.append is LoadState.Loading -> {
@@ -108,7 +113,17 @@ fun UsersScreen() {
                     users.loadState.append is LoadState.Error -> {
                         val error = users.loadState.append as LoadState.Error
                         //show some error message
+                        item {
+                            ErrorLayout(
+                                message = error.error.localizedMessage
+                                    ?: stringResource(R.string.message_generic_error),
+                                onRetry = { users.retry() })
+                        }
                     }
+                }
+                //add some blank space at the bottom so the last list item will be completely visible and not overlapped by the fab
+                item {
+                    Spacer(modifier = Modifier.height(120.dp))
                 }
             }
             FloatingActionButton(

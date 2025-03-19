@@ -1,6 +1,5 @@
 package com.android.androidtestassignment.ui.datamodels
 
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 data class User(

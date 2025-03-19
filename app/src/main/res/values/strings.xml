@@ -2,4 +2,6 @@
     <string name="app_name">AndroidTestAssignment</string>
     <string name="title_users">Users</string>
     <string name="template_age_country">%d years from %s</string>
+    <string name="action_retry">Retry</string>
+    <string name="message_generic_error">Oops, Something went wrong!</string>
 </resources>

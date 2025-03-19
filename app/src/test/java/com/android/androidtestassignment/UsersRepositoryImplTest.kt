@@ -1,14 +1,12 @@
 package com.android.androidtestassignment
 
-import com.android.androidtestassignment.api.UsersRetrofitApi
-import com.android.androidtestassignment.api.datamodel.Coordinates
-import com.android.androidtestassignment.api.datamodel.Info
-import com.android.androidtestassignment.repositories.UsersRepository
-import com.android.androidtestassignment.repositories.UsersRepositoryImpl
 import androidx.paging.PagingData
 import androidx.paging.testing.asSnapshot
+import com.android.androidtestassignment.api.UsersRetrofitApi
+import com.android.androidtestassignment.api.datamodel.Coordinates
 import com.android.androidtestassignment.api.datamodel.Dob
 import com.android.androidtestassignment.api.datamodel.Id
+import com.android.androidtestassignment.api.datamodel.Info
 import com.android.androidtestassignment.api.datamodel.Location
 import com.android.androidtestassignment.api.datamodel.Login
 import com.android.androidtestassignment.api.datamodel.Name
@@ -18,10 +16,10 @@ import com.android.androidtestassignment.api.datamodel.Street
 import com.android.androidtestassignment.api.datamodel.Timezone
 import com.android.androidtestassignment.api.datamodel.UserModel
 import com.android.androidtestassignment.api.datamodel.UsersResponse
+import com.android.androidtestassignment.repositories.UsersRepository
+import com.android.androidtestassignment.repositories.UsersRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -116,7 +114,6 @@ class UsersRepositoryImplTest {
             nat = "UA"
         )
         val usersResponse = UsersResponse(listOf(userModel), Info("", 0, 0, ""))
-        val expectedPagingData = PagingData.from(listOf(userModel))
         `when`(usersApi.getUsers(1, 20, "abc")).thenReturn(usersResponse)
 
         // Act
@@ -130,7 +127,7 @@ class UsersRepositoryImplTest {
     fun `getUsers - empty list`() = runTest {
         // Arrange
         val usersResponse = UsersResponse(emptyList(), Info("", 0, 0, ""))
-        val expectedPagingData = PagingData.empty<UserModel>()
+        PagingData.empty<UserModel>()
         `when`(usersApi.getUsers(1, 20, "abc")).thenReturn(usersResponse)
 
         // Act
